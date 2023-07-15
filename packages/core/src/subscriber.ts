@@ -1,4 +1,4 @@
-import {Observer,Subscription,TeardownLogic} from './type';
+import { Observer, Subscription, TeardownLogic } from './type';
 
 export class Subscriber<T> implements Observer<T>, Subscription {
     closed = false;
@@ -28,18 +28,24 @@ export class Subscriber<T> implements Observer<T>, Subscription {
         this.unsubscribe();
     }
 
+    executeTeardown() {
+        if (!this.closed) {
+            for (const teardown of this.teardowns) {
+                if (typeof teardown === 'function') {
+                    teardown();
+                } else if (teardown && typeof teardown.unsubscribe === 'function') {
+                    teardown.unsubscribe();
+                }
+            }
+        }
+    }
+
     unsubscribe(): void {
         if (this.closed) {
             return;
         }
         this.closed = true;
-        for (const teardown of this.teardowns) {
-            if (typeof teardown === 'function') {
-                teardown();
-            } else if (teardown && typeof teardown.unsubscribe === 'function') {
-                teardown.unsubscribe();
-            }
-        }
+        this.executeTeardown();
         this.teardowns = [];
     }
 

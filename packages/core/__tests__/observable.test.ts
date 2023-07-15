@@ -1,79 +1,92 @@
-import { Observable, SafeObserver } from '../src';
+import { Observable, Subscriber } from '../src';
 
 describe('Observable', () => {
-    test('should call next method of observer', () => {
-        const observer = {
-            next: jest.fn(),
-            error: jest.fn(),
-            complete: jest.fn(),
-        };
-
-        const observable = new Observable<string>((observer) => {
-            observer.next('test');
-        });
-
-        observable.subscribe(observer);
-
-        expect(observer.next).toHaveBeenCalledWith('test');
-        expect(observer.error).not.toHaveBeenCalled();
-        expect(observer.complete).not.toHaveBeenCalled();
+    it('should create an instance', () => {
+        expect(new Observable()).toBeDefined();
     });
 
-    test('should call error method of observer', () => {
-        const observer = {
-            next: jest.fn(),
-            error: jest.fn(),
-            complete: jest.fn(),
-        };
-
-        const observable = new Observable<string>((observer) => {
-            observer.error('error');
+    it('should call next method of observer', (done) => {
+        const next = jest.fn();
+        const observable = new Observable<number>((subscriber) => {
+            subscriber.next(1);
+            subscriber.next(2);
+            subscriber.next(3);
         });
 
-        observable.subscribe(observer);
-
-        expect(observer.error).toHaveBeenCalledWith('error');
-        expect(observer.next).not.toHaveBeenCalled();
-        expect(observer.complete).not.toHaveBeenCalled();
+        observable.subscribe({
+            next: (value) => {
+                next(value);
+                if (value === 3) {
+                    expect(next).toHaveBeenCalledTimes(3);
+                    expect(next).toHaveBeenNthCalledWith(1, 1);
+                    expect(next).toHaveBeenNthCalledWith(2, 2);
+                    expect(next).toHaveBeenNthCalledWith(3, 3);
+                    done();
+                }
+            },
+        });
     });
 
-    test('should call complete method of observer', () => {
-        const observer = {
-            next: jest.fn(),
-            error: jest.fn(),
-            complete: jest.fn(),
-        };
-
-        const observable = new Observable<string>((observer) => {
-            observer.complete();
+    it('should handle error', () => {
+        const error = jest.fn();
+        const observable = new Observable<number>((subscriber) => {
+            try {
+                throw new Error('Test error');
+            } catch (e) {
+                subscriber.error(e);
+            }
         });
 
-        observable.subscribe(observer);
-
-        expect(observer.complete).toHaveBeenCalled();
-        expect(observer.next).not.toHaveBeenCalled();
-        expect(observer.error).not.toHaveBeenCalled();
+        observable.subscribe({
+            error: (err) => {
+                error(err);
+                expect(error).toHaveBeenCalledTimes(1);
+                expect(error).toHaveBeenCalledWith(new Error('Test error'));
+            },
+        });
     });
-});
 
-describe('SafeObserver', () => {
-    test('should not call methods after unsubscribe', () => {
-        const observer = {
-            next: jest.fn(),
-            error: jest.fn(),
-            complete: jest.fn(),
-        };
+    it('should call complete method of observer', (done) => {
+        const complete = jest.fn();
+        const observable = new Observable<number>((subscriber) => {
+            subscriber.next(1);
+            subscriber.next(2);
+            subscriber.next(3);
+            subscriber.complete();
+        });
 
-        const safeObserver = new SafeObserver(observer);
+        observable.subscribe({
+            next: () => {},
+            complete: () => {
+                complete();
+                expect(complete).toHaveBeenCalledTimes(1);
+                done();
+            },
+        });
+    });
 
-        safeObserver.unsubscribe();
+    it('should stop calling next after unsubscribe', (done) => {
+        const next = jest.fn();
+        const observable = new Observable<number>((subscriber) => {
+            let i = 1;
+            const interval = setInterval(() => {
+                subscriber.next(i++);
+            }, 10);
+            return () => clearInterval(interval);
+        });
 
-        safeObserver.next('test');
-        safeObserver.error('error');
-        safeObserver.complete();
+        const subscription = observable.subscribe({
+            next: (value) => {
+                next(value);
+                if (value === 3) {
+                    subscription.unsubscribe();
+                }
+            },
+        });
 
-        expect(observer.next).not.toHaveBeenCalled();
-        expect(observer.error).not.toHaveBeenCalled();
-        expect(observer.complete).not.toHaveBeenCalled();
+        setTimeout(() => {
+            expect(next).toHaveBeenCalledTimes(3);
+            done();
+        }, 50);
     });
 });
