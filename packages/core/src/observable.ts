@@ -1,15 +1,50 @@
-import { SafeObserver } from './safeObserver';
-import { Observer, Subscription } from './type';
+import { Subscriber } from './subscriber';
+import { Subscription } from './subscription';
+import {
+    Observer,
+    Operator,
+    Subscribable,
+    TeardownLogic,
+    OperatorFunction,
+} from './type';
 
-export class Observable<T> {
-    private _subscribe: (observer: Observer<T>) => Subscription;
+export class Observable<T> implements Subscribable<T> {
+    source: Observable<any> | undefined;
+    operator: Operator<any, T> | undefined;
 
-    constructor(subscribe: (observer: Observer<T>) => Subscription) {
-        this._subscribe = subscribe;
+    constructor(private subscribeFn?: (this: Observable<T>, subscriber: Subscriber<T>) => TeardownLogic) {}
+
+    subscribe(observerOrNext?: Partial<Observer<T>> | ((value: T) => void), error?: (error: any) => void, complete?: () => void): Subscription {
+        let observer: Partial<Observer<T>>;
+        if (typeof observerOrNext === 'function') {
+            observer = {
+                next: observerOrNext,
+                error,
+                complete
+            };
+        } else {
+            observer = observerOrNext || {};
+        }
+
+        const subscriber = new Subscriber(observer as Observer<T>);
+        const subscription = this.subscribeFn?.call(this, subscriber);
+        if (subscription) {
+            subscriber.add(subscription);
+        }
+        return subscriber;
     }
 
-    subscribe(observer: Observer<T>): Subscription {
-        const safeObserver = new SafeObserver(observer);
-        return this._subscribe(safeObserver);
+    forEach(next: (value: T) => void, promiseCtor?: PromiseConstructorLike): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            this.subscribe({
+                next,
+                error: reject,
+                complete: resolve
+            });
+        });
+    }
+
+    pipe(...operations: OperatorFunction<any, any>[]): Observable<any> {
+        return operations.reduce((prev, fn) => fn(prev), this);
     }
 }

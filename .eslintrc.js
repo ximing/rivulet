@@ -12,6 +12,7 @@ module.exports = {
         '@typescript-eslint/ban-ts-comment': 'off',
         '@typescript-eslint/class-name-casing': 'off',
         'import/prefer-default-export': 'off',
+        'no-use-before-define': 'off',
         'no-eval': 'off',
         eqeqeq: 'off',
         'new-cap': 'off',
