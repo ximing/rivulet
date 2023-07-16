@@ -35,12 +35,12 @@ export class Observable<T> implements Subscribable<T> {
         return subscriber;
     }
 
-    lift<R>(operator: Operator<T, R>): Observable<R> {
-        const observable = new Observable<R>();
-        observable.source = this;
-        observable.operator = operator;
-        return observable;
-    }
+    // lift<R>(operator: Operator<T, R>): Observable<R> {
+    //     const observable = new Observable<R>();
+    //     observable.source = this;
+    //     observable.operator = operator;
+    //     return observable;
+    // }
 
     // forEach(next: (value: T) => void, promiseCtor?: PromiseConstructorLike): Promise<void> {
     //     return new Promise<void>((resolve, reject) => {
