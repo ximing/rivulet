@@ -44,9 +44,9 @@ export class Subscriber<T> implements Observer<T>, Subscription {
     if (this.closed) {
       return;
     }
-    this.closed = true;
     this.executeTeardown();
     this.teardowns = [];
+    this.closed = true;
   }
 
   add(teardown: TeardownLogic): void {

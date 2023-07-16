@@ -140,7 +140,7 @@ describe('Subscriber', () => {
     subscriber.add(teardown);
     subscriber.unsubscribe();
 
-    expect(teardown).toHaveBeenCalledTimes(0);
+    expect(teardown).toHaveBeenCalledTimes(1);
     expect(subscriber.closed).toBe(true);
   });
 
