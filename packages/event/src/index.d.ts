@@ -4,7 +4,7 @@
  */
 declare class EventEmitter<
   EventTypes extends EventEmitter.ValidEventTypes = string | symbol,
-  Context = any
+  Context = any,
 > {
   static prefixed: string | boolean;
 
@@ -87,7 +87,7 @@ declare namespace EventEmitter {
   export interface EventEmitterStatic {
     new <
       EventTypes extends ValidEventTypes = string | symbol,
-      Context = any
+      Context = any,
     >(): EventEmitter<EventTypes, Context>;
   }
 
@@ -116,7 +116,7 @@ declare namespace EventEmitter {
 
   export type EventListener<
     T extends ValidEventTypes,
-    K extends EventNames<T>
+    K extends EventNames<T>,
   > = T extends string | symbol
     ? (...args: any[]) => void
     : (
@@ -125,7 +125,7 @@ declare namespace EventEmitter {
 
   export type EventArgs<
     T extends ValidEventTypes,
-    K extends EventNames<T>
+    K extends EventNames<T>,
   > = Parameters<EventListener<T, K>>;
 
   export const EventEmitter: EventEmitterStatic;

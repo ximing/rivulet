@@ -4,7 +4,7 @@
  */
 export interface IEventEmitter<
   EventTypes extends ValidEventTypes = string | symbol,
-  Context = any
+  Context = any,
 > {
   // eventNames(): Array<EventNames<EventTypes>>;
 
@@ -74,7 +74,7 @@ type ArgumentMap<T extends object> = {
 
 type EventListener<
   T extends ValidEventTypes,
-  K extends EventNames<T>
+  K extends EventNames<T>,
 > = T extends string | symbol
   ? (...args: any[]) => void
   : (
