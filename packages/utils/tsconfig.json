@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "lib": ["esnext"],
+    "skipLibCheck": true,
+    "downlevelIteration": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "noImplicitThis": true,
+    "target": "ES5"
+  },
+  "include": ["./rollup.config.ts", "src/**/*", "typings/**/*"],
+  "exclude": ["src/__mocks__", "cjs", "esm"]
+}

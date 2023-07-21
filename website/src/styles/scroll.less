@@ -1,0 +1,22 @@
+.thin-scrollbar {
+  scrollbar-width: thin;
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  height: var(--rivulet-scrollbar-size);
+  width: var(--rivulet-scrollbar-size);
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: var(--rivulet-scrollbar-track-background-color);
+  border-radius: 10px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--rivulet-scrollbar-thumb-background-color);
+  border-radius: 10px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--rivulet-scrollbar-thumb-hover-background-color);
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@rivulet/utils",
+  "version": "1.0.0",
+  "description": "Util library.",
+  "scripts": {
+    "clean": "rimraf esm cjs lib dist tsconfig.tsbuildinfo",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "watch": "npm run build -- --watch src",
+    "test:coverage": "jest --coverage",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "tsc": "tsc --project tsconfig.json --noEmit#"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./src/index.ts",
+  "keywords": [
+    "miniapp",
+    "mini-program",
+    "wechat"
+  ],
+  "files": [
+    "dist",
+    "readme.md"
+  ],
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^27.4.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^5.0.4"
+  }
+}

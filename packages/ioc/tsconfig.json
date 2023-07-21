@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "lib": ["esnext"],
+    "types": ["@types/wechat-miniprogram"],
+    "skipLibCheck": true,
+    "downlevelIteration": true,
+    "noImplicitAny": false,
+    "removeComments": false,
+    "noImplicitThis": true,
+    "target": "ES2016"
+  },
+  "include": ["src/**/*", "typings/**/*"],
+  "exclude": ["dist"]
+}

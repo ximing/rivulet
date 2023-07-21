@@ -1,0 +1,28 @@
+{
+  "name": "@rivulet/facade",
+  "version": "1.0.0",
+  "description": "生态子系统公约",
+  "scripts": {
+    "build": "tsc"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
+  "keywords": [
+    "miniapp",
+    "mini-program",
+    "wechat"
+  ],
+  "files": [
+    "dist",
+    "readme.md"
+  ],
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^27.4.5",
+    "rimraf": "^3.0.2",
+    "typescript": "^5.0.4"
+  }
+}
